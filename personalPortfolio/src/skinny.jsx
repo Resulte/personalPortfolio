@@ -286,7 +286,7 @@ function SkinContent() {
           </mesh>
           <mesh position={[-9,-6,-8]} rotation={[0,0,0]}>
             <Text3D font={"Oblygasi_Regular.json"} size={1.5}>
-              Hi! I'm Jacob Dement!
+              Hi! I'm Resulte Lee!
             <MeshDistortMaterial distort={.1} speed={2} color="#ffff00"/>
             </Text3D>
           </mesh>
@@ -413,7 +413,7 @@ function SkinContent() {
     // Handle click event
     const handleClick = () => {
       console.log("About Clicked")
-      window.open("https://jacob.dement.dev", "_blank")
+      window.open("https://resulte.top/blog", "_blank")
     };
   
     return (
@@ -447,7 +447,7 @@ function SkinContent() {
     // Handle click event
     const handleClick = () => {
       console.log("Git Clicked")
-      window.open("https://github.com/Oia20", "_blank")
+      window.open("https://github.com/Resulte", "_blank")
     };
   
     return (
@@ -481,7 +481,7 @@ function SkinContent() {
     // Handle click event
     const handleClick = () => {
       console.log("Ocean Clicked")
-      window.open("https://www.linkedin.com/in/jacob-dement-35658b275/", "_blank")
+      window.open("https://www.linkedin.com/in/resulte-lee-620735347", "_blank")
     };
   
     return (
@@ -517,7 +517,7 @@ function SkinContent() {
   
     // Handle click event
     const handleClick = () => {
-      window.open("https://jacob.dement.dev")
+      window.open("https://resulte.top/blog")
     };
   
     return (

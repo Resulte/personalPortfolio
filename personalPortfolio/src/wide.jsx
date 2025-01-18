@@ -289,7 +289,7 @@ function LoadAbout() {
   const group = useRef();
 
   const handleClick = () => {
-    // window.open("https://jacob.dement.dev", "_blank");
+    // window.open("https://resulte.top/blog", "_blank");
   };
 
   return (
@@ -317,7 +317,7 @@ function LoadGit() {
   return (
     <group 
       ref={group} 
-      onClick={() => window.open("https://github.com/Oia20", "_blank")}
+      onClick={() => window.open("https://github.com/Resulte", "_blank")}
       style={{ cursor: 'pointer' }}
     >
       {gltf.scene && <primitive object={gltf.scene} />}
@@ -356,7 +356,7 @@ function LoadLinked() {
   return (
     <group 
       ref={group} 
-      onClick={() => window.open("https://www.linkedin.com/in/jacob-dement-35658b275/", "_blank")}
+      onClick={() => window.open("https://www.linkedin.com/in/resulte-lee-620735347", "_blank")}
       style={{ cursor: 'pointer' }}
     >
       {gltf.scene && <primitive object={gltf.scene} />}
@@ -395,7 +395,7 @@ function LoadProjects() {
   return (
     <animated.group
       ref={group}
-      onClick={() => window.open("https://jacob.dement.dev", "_blank")}
+      onClick={() => window.open("https://resulte.top/blog", "_blank")}
       style={{ cursor: 'pointer' }}
     >
       {gltf.scene && <primitive object={gltf.scene} />}
@@ -528,7 +528,7 @@ function WideContent() {
 
             <mesh position={[-9, -6, -8]} rotation={[0, 0, 0]}>
               <Text3D font={"Oblygasi_Regular.json"} size={1.5}>
-                Hi! I'm Jacob Dement!
+                Hi! I'm Resulte Lee!
                 <MeshDistortMaterial distort={0.1} speed={2} color="#ffff00" />
               </Text3D>
             </mesh>
