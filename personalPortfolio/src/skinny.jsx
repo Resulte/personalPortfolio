@@ -413,7 +413,7 @@ function SkinContent() {
     // Handle click event
     const handleClick = () => {
       console.log("About Clicked")
-      window.open("https://resulte.top/blog", "_blank")
+      window.open("https://resulte.top", "_blank")
     };
   
     return (
@@ -447,7 +447,7 @@ function SkinContent() {
     // Handle click event
     const handleClick = () => {
       console.log("Git Clicked")
-      window.open("https://github.com/Resulte", "_blank")
+      // window.open("https://github.com/Resulte", "_blank")
     };
   
     return (
@@ -517,7 +517,7 @@ function SkinContent() {
   
     // Handle click event
     const handleClick = () => {
-      window.open("https://resulte.top/blog")
+      window.open("https://resulte.top")
     };
   
     return (

@@ -289,7 +289,7 @@ function LoadAbout() {
   const group = useRef();
 
   const handleClick = () => {
-    // window.open("https://resulte.top/blog", "_blank");
+    // window.open("https://resulte.top", "_blank");
   };
 
   return (
@@ -395,7 +395,7 @@ function LoadProjects() {
   return (
     <animated.group
       ref={group}
-      onClick={() => window.open("https://resulte.top/blog", "_blank")}
+      onClick={() => window.open("https://resulte.top", "_blank")}
       style={{ cursor: 'pointer' }}
     >
       {gltf.scene && <primitive object={gltf.scene} />}
