@@ -1,146 +1,150 @@
-import React, { Suspense, useRef, useState, useEffect, useContext } from 'react';
-import { Canvas, useLoader, useThree, useFrame } from '@react-three/fiber';
-import { 
-  Stars, 
-  useProgress, 
+import React, {
+  Suspense,
+  useRef,
+  useState,
+  useEffect,
+  useContext,
+} from "react";
+import { Canvas, useLoader, useThree, useFrame } from "@react-three/fiber";
+import {
+  Stars,
+  useProgress,
   Html,
-  Sparkles, 
-  MeshWobbleMaterial, 
-  Float, 
-  Text3D, 
-  MeshDistortMaterial 
-} from '@react-three/drei';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Vector3, DirectionalLight } from 'three';
-import { useSpring, animated } from '@react-spring/three';
-import './swipe.css'
-import { CameraContext, CameraProvider } from './CameraContext';
+  Sparkles,
+  MeshWobbleMaterial,
+  Float,
+  Text3D,
+  MeshDistortMaterial,
+} from "@react-three/drei";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Vector3, DirectionalLight } from "three";
+import { useSpring, animated } from "@react-spring/three";
+import "./swipe.css";
+import { CameraContext, CameraProvider } from "./CameraContext";
 
 const Loader = () => {
-  
-    const { progress } = useProgress();
-    
-    return (
-      <Html center>
-        <div className="loader-container">
-          <div className="wave-container">
-            {[...Array(12)].map((_, index) => (
-              <div
-                key={index}
-                className="particle"
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                  left: `${index * 8}px`
-                }}
-              />
-            ))}
-            {[...Array(12)].map((_, index) => (
-              <div
-                key={`foam-${index}`}
-                className="foam-particle"
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                  left: `${index * 8}px`
-                }}
-              />
-            ))}
-          <span className="progress-text">{Math.ceil(progress)}% loaded</span>
+  const { progress } = useProgress();
 
-          </div>
+  return (
+    <Html center>
+      <div className="loader-container">
+        <div className="wave-container">
+          {[...Array(12)].map((_, index) => (
+            <div
+              key={index}
+              className="particle"
+              style={{
+                animationDelay: `${index * 0.1}s`,
+                left: `${index * 8}px`,
+              }}
+            />
+          ))}
+          {[...Array(12)].map((_, index) => (
+            <div
+              key={`foam-${index}`}
+              className="foam-particle"
+              style={{
+                animationDelay: `${index * 0.1}s`,
+                left: `${index * 8}px`,
+              }}
+            />
+          ))}
+          <span className="progress-text">{Math.ceil(progress)}% loaded</span>
         </div>
-  
-        <style jsx>{`
-          .loader-container {
-            display: flex;
-            align-items: center;
-            color: white;
-            font-size: 2em;
+      </div>
+
+      <style jsx>{`
+        .loader-container {
+          display: flex;
+          align-items: center;
+          color: white;
+          font-size: 2em;
+        }
+
+        .wave-container {
+          position: relative;
+          width: 100px;
+          height: 60px;
+        }
+
+        .particle {
+          position: absolute;
+          width: 6px;
+          height: 6px;
+          background-color: #4a90e2;
+          border-radius: 50%;
+          animation: wave 2s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        .foam-particle {
+          position: absolute;
+          width: 4px;
+          height: 4px;
+          background-color: white;
+          border-radius: 50%;
+          animation: foam 2s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+          opacity: 0;
+        }
+
+        .progress-text {
+          color: #4affff;
+        }
+
+        @keyframes wave {
+          0% {
+            transform: translate(0, 0) scale(1);
+            background-color: #4affff;
           }
-  
-          .wave-container {
-            position: relative;
-            width: 100px;
-            height: 60px;
+          25% {
+            transform: translate(10px, -20px) scale(1.2);
+            background-color: black;
           }
-  
-          .particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background-color: #4a90e2;
-            border-radius: 50%;
-            animation: wave 2s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+          50% {
+            transform: translate(20px, -5px) scale(1.1);
+            background-color: grey;
           }
-  
-          .foam-particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background-color: white;
-            border-radius: 50%;
-            animation: foam 2s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+          75% {
+            transform: translate(30px, -25px) scale(0.9);
+            background-color: red;
+          }
+          85% {
+            transform: translate(35px, 0) scale(0.8);
+            background-color: orange;
+          }
+          100% {
+            transform: translate(40px, 0) scale(0.7);
+            opacity: 0;
+            background-color: #102e4a;
+          }
+        }
+
+        @keyframes foam {
+          0% {
+            transform: translate(0, 0) scale(0);
             opacity: 0;
           }
-  
-          .progress-text {
-            color: #4affff;
-
+          50% {
+            transform: translate(20px, -15px) scale(1.5);
+            opacity: 0.7;
           }
-  
-          @keyframes wave {
-            0% {
-              transform: translate(0, 0) scale(1);
-              background-color: #4affff;
-            }
-            25% {
-              transform: translate(10px, -20px) scale(1.2);
-              background-color: black;
-            }
-            50% {
-              transform: translate(20px, -5px) scale(1.1);
-              background-color: grey;
-            }
-            75% {
-              transform: translate(30px, -25px) scale(0.9);
-              background-color: red;
-            }
-            85% {
-              transform: translate(35px, 0) scale(0.8);
-              background-color: orange;
-            }
-            100% {
-              transform: translate(40px, 0) scale(0.7);
-              opacity: 0;
-              background-color: #102e4a;
-            }
+          100% {
+            transform: translate(40px, 0) scale(0.5);
+            opacity: 0;
           }
-  
-          @keyframes foam {
-            0% {
-              transform: translate(0, 0) scale(0);
-              opacity: 0;
-            }
-            50% {
-              transform: translate(20px, -15px) scale(1.5);
-              opacity: 0.7;
-            }
-            100% {
-              transform: translate(40px, 0) scale(0.5);
-              opacity: 0;
-            }
-          }
-        `}</style>
-      </Html>
-    );
-  };
+        }
+      `}</style>
+    </Html>
+  );
+};
 function CameraController() {
   const { camera } = useThree();
-  const { targetIndex, setTargetIndex, cameraPositions, setHasScrolled } = useContext(CameraContext);
+  const { targetIndex, setTargetIndex, cameraPositions, setHasScrolled } =
+    useContext(CameraContext);
   const currentPosition = useRef(new Vector3(25, -8, 20));
   const currentLookAt = useRef(new Vector3(0, -10, 0));
   const scrollTimeout = useRef(null);
   const lastScrollTime = useRef(Date.now());
-  
+
   // Add new refs for panning
   const isDragging = useRef(false);
   const previousMousePosition = useRef({ x: 0, y: 0 });
@@ -151,7 +155,7 @@ function CameraController() {
       isDragging.current = true;
       previousMousePosition.current = {
         x: event.clientX,
-        y: event.clientY
+        y: event.clientY,
       };
     };
 
@@ -170,7 +174,7 @@ function CameraController() {
 
       previousMousePosition.current = {
         x: event.clientX,
-        y: event.clientY
+        y: event.clientY,
       };
     };
 
@@ -186,14 +190,14 @@ function CameraController() {
       resetPan();
     };
 
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
 
     return () => {
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
   }, []);
 
@@ -226,14 +230,14 @@ function CameraController() {
     };
 
     // Add both wheel and touchpad event listeners
-    window.addEventListener('wheel', handleScroll, { passive: false });
-    window.addEventListener('mousewheel', handleScroll, { passive: false });
-    window.addEventListener('DOMMouseScroll', handleScroll, { passive: false });
+    window.addEventListener("wheel", handleScroll, { passive: false });
+    window.addEventListener("mousewheel", handleScroll, { passive: false });
+    window.addEventListener("DOMMouseScroll", handleScroll, { passive: false });
 
     return () => {
-      window.removeEventListener('wheel', handleScroll);
-      window.removeEventListener('mousewheel', handleScroll);
-      window.removeEventListener('DOMMouseScroll', handleScroll);
+      window.removeEventListener("wheel", handleScroll);
+      window.removeEventListener("mousewheel", handleScroll);
+      window.removeEventListener("DOMMouseScroll", handleScroll);
       if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
     };
   }, [setTargetIndex, setHasScrolled]);
@@ -242,16 +246,14 @@ function CameraController() {
     const lerpFactor = 0.03;
     const targetPosition = cameraPositions[targetIndex].position;
     const targetLookAt = cameraPositions[targetIndex].target;
-    
+
     currentPosition.current.lerp(targetPosition, lerpFactor);
     currentLookAt.current.lerp(targetLookAt, lerpFactor);
-    
+
     // Apply pan offset to camera position
-    camera.position.copy(currentPosition.current).add(new Vector3(
-      panOffset.current.x,
-      panOffset.current.y,
-      0
-    ));
+    camera.position
+      .copy(currentPosition.current)
+      .add(new Vector3(panOffset.current.x, panOffset.current.y, 0));
     camera.lookAt(currentLookAt.current);
   });
 
@@ -259,11 +261,10 @@ function CameraController() {
 }
 
 function LoadOcean() {
-  const gltf = useLoader(GLTFLoader, './models/ocean.glb');
+  const gltf = useLoader(GLTFLoader, "./models/ocean.glb");
   const group = useRef();
 
-  const handleClick = () => {
-  };
+  const handleClick = () => {};
 
   return (
     <group ref={group} onClick={handleClick}>
@@ -285,11 +286,11 @@ function Ocean() {
 }
 
 function LoadAbout() {
-  const gltf = useLoader(GLTFLoader, './models/about.glb');
+  const gltf = useLoader(GLTFLoader, "./models/about.glb");
   const group = useRef();
 
   const handleClick = () => {
-    // window.open("https://resulte.top", "_blank");
+    // window.open("https://Resulte.github.io", "_blank");
   };
 
   return (
@@ -311,14 +312,14 @@ function About() {
 }
 
 function LoadGit() {
-  const gltf = useLoader(GLTFLoader, './models/git.glb');
+  const gltf = useLoader(GLTFLoader, "./models/git.glb");
   const group = useRef();
 
   return (
-    <group 
-      ref={group} 
+    <group
+      ref={group}
       onClick={() => window.open("https://github.com/Resulte", "_blank")}
-      style={{ cursor: 'pointer' }}
+      style={{ cursor: "pointer" }}
     >
       {gltf.scene && <primitive object={gltf.scene} />}
     </group>
@@ -330,34 +331,46 @@ function Git() {
   const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
-    document.body.style.cursor = hovered ? 'pointer' : 'auto'
+    document.body.style.cursor = hovered ? "pointer" : "auto";
     return () => {
-      document.body.style.cursor = 'auto'
-    }
-  }, [hovered])
+      document.body.style.cursor = "auto";
+    };
+  }, [hovered]);
 
   return (
     <group>
-      <mesh 
+      <mesh
         ref={mesh}
         onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}>
+        onPointerOut={() => setHovered(false)}
+      >
         <LoadGit />
-        <Sparkles noise={.1} count={30} size={8} scale={4} position={[1, -12, 15]}/>
+        <Sparkles
+          noise={0.1}
+          count={30}
+          size={8}
+          scale={4}
+          position={[1, -12, 15]}
+        />
       </mesh>
     </group>
   );
 }
 
 function LoadLinked() {
-  const gltf = useLoader(GLTFLoader, './models/linkedinn.glb');
+  const gltf = useLoader(GLTFLoader, "./models/linkedinn.glb");
   const group = useRef();
 
   return (
-    <group 
-      ref={group} 
-      onClick={() => window.open("https://www.linkedin.com/in/resulte-lee-620735347", "_blank")}
-      style={{ cursor: 'pointer' }}
+    <group
+      ref={group}
+      onClick={() =>
+        window.open(
+          "https://www.linkedin.com/in/resulte-lee-620735347",
+          "_blank",
+        )
+      }
+      style={{ cursor: "pointer" }}
     >
       {gltf.scene && <primitive object={gltf.scene} />}
     </group>
@@ -369,34 +382,41 @@ function Linked() {
   const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
-    document.body.style.cursor = hovered ? 'pointer' : 'auto'
+    document.body.style.cursor = hovered ? "pointer" : "auto";
     return () => {
-      document.body.style.cursor = 'auto'
-    }
-  }, [hovered])
+      document.body.style.cursor = "auto";
+    };
+  }, [hovered]);
 
   return (
     <group>
-      <mesh         
+      <mesh
         ref={mesh}
         onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}>
+        onPointerOut={() => setHovered(false)}
+      >
         <LoadLinked />
-        <Sparkles noise={.1} count={30} size={8} scale={4} position={[-4, -5.5, 16]}/>
+        <Sparkles
+          noise={0.1}
+          count={30}
+          size={8}
+          scale={4}
+          position={[-4, -5.5, 16]}
+        />
       </mesh>
     </group>
   );
 }
 
 function LoadProjects() {
-  const gltf = useLoader(GLTFLoader, './models/Projects.glb');
+  const gltf = useLoader(GLTFLoader, "./models/Projects.glb");
   const group = useRef();
 
   return (
     <animated.group
       ref={group}
-      onClick={() => window.open("https://resulte.top", "_blank")}
-      style={{ cursor: 'pointer' }}
+      onClick={() => window.open("https://Resulte.github.io", "_blank")}
+      style={{ cursor: "pointer" }}
     >
       {gltf.scene && <primitive object={gltf.scene} />}
     </animated.group>
@@ -408,11 +428,11 @@ function Projects() {
   const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
-    document.body.style.cursor = hovered ? 'pointer' : 'auto'
+    document.body.style.cursor = hovered ? "pointer" : "auto";
     return () => {
-      document.body.style.cursor = 'auto'
-    }
-  }, [hovered])
+      document.body.style.cursor = "auto";
+    };
+  }, [hovered]);
 
   return (
     <group>
@@ -423,7 +443,13 @@ function Projects() {
       >
         <LoadProjects />
       </mesh>
-      <Sparkles noise={.1} count={30} size={8} scale={4} position={[14, -7.9, -7.5]}/>
+      <Sparkles
+        noise={0.1}
+        count={30}
+        size={8}
+        scale={4}
+        position={[14, -7.9, -7.5]}
+      />
     </group>
   );
 }
@@ -433,8 +459,18 @@ function Light() {
 
   return (
     <>
-      <directionalLight color="blue" intensity={1} ref={dirLight} position={[10, 5, 10]} />
-      <directionalLight color="whitesmoke" intensity={1} ref={dirLight} position={[10, 5, 10]} />
+      <directionalLight
+        color="blue"
+        intensity={1}
+        ref={dirLight}
+        position={[10, 5, 10]}
+      />
+      <directionalLight
+        color="whitesmoke"
+        intensity={1}
+        ref={dirLight}
+        position={[10, 5, 10]}
+      />
     </>
   );
 }
@@ -448,7 +484,8 @@ function Wide() {
 }
 
 function WideContent() {
-  const { hasScrolled, setCameraPosition, targetIndex } = useContext(CameraContext);
+  const { hasScrolled, setCameraPosition, targetIndex } =
+    useContext(CameraContext);
   const [isLoaded, setIsLoaded] = useState(false);
   const { progress } = useProgress();
 
@@ -462,26 +499,26 @@ function WideContent() {
     { name: "Welcome" },
     { name: "About & Projects" },
     { name: "Socials" },
-    { name: "Overview" }
+    { name: "Overview" },
   ];
 
   return (
     <>
-      <Canvas 
-        style={{ 
+      <Canvas
+        style={{
           background: "linear-gradient(70deg, #201658, #1597E5, #201658)",
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          right: 0, 
-          bottom: 0 
-        }} 
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
         camera={{ fov: 90, position: [25, -8, 20] }}
       >
         <Suspense fallback={<Loader />}>
           <CameraController />
           <ambientLight intensity={0.9} />
-          
+
           <Sparkles scale={14} size={5} position={[0, -8, 0]} count={40} />
           <Sparkles scale={14} size={5} position={[11, -8, 0]} count={40} />
           <Sparkles scale={14} size={5} position={[-11, -8, 0]} count={40} />
@@ -495,10 +532,18 @@ function WideContent() {
           <Light />
           <Float>
             <Ocean />
-            <Float floatIntensity={0.5} floatingRange={0.5} rotationIntensity={0.3}>
+            <Float
+              floatIntensity={0.5}
+              floatingRange={0.5}
+              rotationIntensity={0.3}
+            >
               <About />
             </Float>
-            <Float floatIntensity={0.5} floatingRange={0.5} rotationIntensity={0.4}>
+            <Float
+              floatIntensity={0.5}
+              floatingRange={0.5}
+              rotationIntensity={0.4}
+            >
               <Linked />
               <Projects />
               <Git />
@@ -544,63 +589,73 @@ function WideContent() {
       </Canvas>
 
       {isLoaded && (
-        <div style={{
-          position: 'fixed',
-          left: '40px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          gap: '30px',
-          zIndex: 1000
-        }}>
-          <div style={{
-            position: 'absolute',
-            left: '5px',
-            top: '0',
-            width: '2px',
-            height: '100%',
-            backgroundColor: 'rgba(255, 255, 255, 0.3)',
-            zIndex: -1
-          }} />
-          
-          <div style={{
-            position: 'absolute',
-            left: '5px',
-            top: '0',
-            width: '2px',
-            height: `${(targetIndex / (sections.length - 1)) * 100}%`,
-            backgroundColor: '#4affff',
-            zIndex: -1,
-            transition: 'height 0.3s ease'
-          }} />
+        <div
+          style={{
+            position: "fixed",
+            left: "40px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "30px",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              left: "5px",
+              top: "0",
+              width: "2px",
+              height: "100%",
+              backgroundColor: "rgba(255, 255, 255, 0.3)",
+              zIndex: -1,
+            }}
+          />
+
+          <div
+            style={{
+              position: "absolute",
+              left: "5px",
+              top: "0",
+              width: "2px",
+              height: `${(targetIndex / (sections.length - 1)) * 100}%`,
+              backgroundColor: "#4affff",
+              zIndex: -1,
+              transition: "height 0.3s ease",
+            }}
+          />
 
           {sections.map((section, index) => (
-            <div 
+            <div
               key={index}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                cursor: 'pointer',
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
                 opacity: targetIndex === index ? 1 : 0.5,
-                transition: 'opacity 0.3s ease'
+                transition: "opacity 0.3s ease",
               }}
               onClick={() => setCameraPosition(index)}
             >
-              <div style={{
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
-                backgroundColor: index <= targetIndex ? '#4affff' : 'white',
-                marginRight: '10px',
-                transition: 'background-color 0.3s ease'
-              }} />
-              <span style={{
-                color: 'white',
-                fontSize: '16px',
-                fontWeight: targetIndex === index ? 'bold' : 'normal'
-              }}>
+              <div
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  borderRadius: "50%",
+                  backgroundColor: index <= targetIndex ? "#4affff" : "white",
+                  marginRight: "10px",
+                  transition: "background-color 0.3s ease",
+                }}
+              />
+              <span
+                style={{
+                  color: "white",
+                  fontSize: "16px",
+                  fontWeight: targetIndex === index ? "bold" : "normal",
+                }}
+              >
                 {section.name}
               </span>
             </div>
@@ -610,75 +665,95 @@ function WideContent() {
 
       {isLoaded && !hasScrolled && (
         <>
-          <div style={{
-            position: 'absolute',
-            bottom: '40px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,   
-            cursor: 'pointer',
-            width: '300px',
-            height: '100px'
-          }}
-          onClick={() => setCameraPosition(1)}
-          className='hi'>
-            <svg 
-              className="scroll-indicator" 
-              xmlns="http://www.w3.org/2000/svg" 
+          <div
+            style={{
+              position: "absolute",
+              bottom: "40px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000,
+              cursor: "pointer",
+              width: "300px",
+              height: "100px",
+            }}
+            onClick={() => setCameraPosition(1)}
+            className="hi"
+          >
+            <svg
+              className="scroll-indicator"
+              xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 40 80"
               style={{
-                width: '40px',
-                height: '80px',
-                display: 'block'
+                width: "40px",
+                height: "80px",
+                display: "block",
               }}
             >
-              <rect x="0" y="0" width="40" height="80" rx="20" ry="20" fill="rgba(32, 22, 88, 0.4)"/>
+              <rect
+                x="0"
+                y="0"
+                width="40"
+                height="80"
+                rx="20"
+                ry="20"
+                fill="rgba(32, 22, 88, 0.4)"
+              />
 
-              <path d="M8 35 L20 47 L32 35" 
-                    fill="none" 
-                    stroke="rgba(74, 255, 255, 0.8)" 
-                    strokeWidth="3" 
-                    strokeLinecap="round"
-                    strokeLinejoin="round">
+              <path
+                d="M8 35 L20 47 L32 35"
+                fill="none"
+                stroke="rgba(74, 255, 255, 0.8)"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <animate
                   attributeName="opacity"
                   values="0.4;1;0.4"
                   dur="1.5s"
-                  repeatCount="indefinite"/>
+                  repeatCount="indefinite"
+                />
               </path>
-              <path d="M8 25 L20 37 L32 25" 
-                    fill="none" 
-                    stroke="rgba(74, 255, 255, 0.8)" 
-                    strokeWidth="3" 
-                    strokeLinecap="round"
-                    strokeLinejoin="round">
+              <path
+                d="M8 25 L20 37 L32 25"
+                fill="none"
+                stroke="rgba(74, 255, 255, 0.8)"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <animate
                   attributeName="opacity"
                   values="1;0.4;1"
                   dur="1.5s"
-                  repeatCount="indefinite"/>
+                  repeatCount="indefinite"
+                />
               </path>
             </svg>
           </div>
-          
-          <div style={{
-            position: 'absolute',
-            bottom: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 1000,
-          }}>
-            <span style={{
-              color: 'rgba(74, 255, 255, 0.8)',
-              fontSize: '14px',
-              fontFamily: 'Arial, sans-serif',
-              letterSpacing: '1px',
-              textTransform: 'uppercase',
-              animation: 'fadeInOut 2s infinite'
-            }}>
+
+          <div
+            style={{
+              position: "absolute",
+              bottom: "20px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 1000,
+            }}
+          >
+            <span
+              style={{
+                color: "rgba(74, 255, 255, 0.8)",
+                fontSize: "14px",
+                fontFamily: "Arial, sans-serif",
+                letterSpacing: "1px",
+                textTransform: "uppercase",
+                animation: "fadeInOut 2s infinite",
+              }}
+            >
               Scroll to navigate
             </span>
           </div>
